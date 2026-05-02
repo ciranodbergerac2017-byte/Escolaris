@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 6: Velocidad y Resistencia - Colegio Escolaris</title>
+    <style>
+        :root {
+            --orange: #db6015;
+            --yellow: #f7be00;
+            --dark-blue: #244b5a;
+            --brick-red: #993921;
+            --light-blue: #f0f8ff;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-blue);
+            color: var(--dark-blue);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #presentation-container {
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            background: var(--white);
+            position: relative;
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 40px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        h1 { color: var(--orange); font-size: 2.5rem; margin-bottom: 20px; font-weight: bold; }
+        h2 { color: var(--dark-blue); margin-bottom: 20px; }
+        p { font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; max-width: 80%; }
+
+        .btn-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+
+        .btn-nav:active { transform: translateY(-50%) scale(0.9); }
+        .btn-prev { left: 10px; }
+        .btn-next { right: 10px; }
+
+        .arrow-icon {
+            fill: var(--orange);
+            width: 60px;
+            height: 60px;
+        }
+
+        .img-container {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .img-container img { width: 100%; height: auto; display: block; }
+
+        .activity-card {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background: var(--white);
+            border: 2px solid var(--yellow);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover { background: var(--yellow); color: var(--white); }
+        .option-btn.correct { background: #4caf50; color: white; border-color: #4caf50; }
+        .option-btn.incorrect { background: #f44336; color: white; border-color: #f44336; }
+
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 50px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .retry-btn {
+            background: var(--dark-blue);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Exploration hotspots */
+        .hotspot-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .hotspot {
+            position: absolute;
+            background: var(--orange);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(219, 96, 21, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(219, 96, 21, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(219, 96, 21, 0); }
+        }
+
+        .hotspot-info {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-top: 10px;
+            display: none;
+        }
+
+        .step-btn {
+            background: var(--white);
+            border: 2px dashed var(--orange);
+            padding: 15px;
+            margin: 5px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .step-btn.done { background: var(--orange); color: white; border-style: solid; }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--yellow);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 600px) {
+            #presentation-container { height: 100vh; border-radius: 0; }
+            h1 { font-size: 1.8rem; }
+            p { font-size: 1rem; }
+            .options-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="presentation-container">
+    <div class="progress-bar" id="progress"></div>
+
+    <button class="btn-nav btn-prev" onclick="prevSlide()" id="prevBtn">
+        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+    </button>
+    <button class="btn-nav btn-next" onclick="nextSlide()" id="nextBtn">
+        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+    </button>
+
+    <!-- Slide 1: Portada -->
+    <div class="slide active" id="slide-1">
+        <h1>Velocidad y Resistencia</h1>
+        <h2>Educación Física - 4° Primaria</h2>
+        <div class="img-container">
+            <img src="assets/cover.png" alt="Niños haciendo deporte">
+        </div>
+        <p>¡Hola, Atleta Escolaris! Hoy vamos a descubrir cómo funciona el motor de nuestro cuerpo.</p>
+    </div>
+
+    <!-- Slide 2: Objetivos -->
+    <div class="slide" id="slide-2">
+        <h1>Nuestros Objetivos</h1>
+        <div class="activity-card" style="text-align: left;">
+            <p>🎯 Aprender la diferencia entre velocidad y resistencia.</p>
+            <p>🎯 Identificar actividades que nos hacen más rápidos o fuertes.</p>
+            <p>🎯 Practicar con alegría respetando nuestro cuerpo.</p>
+        </div>
+    </div>
+
+    <!-- Slide 3: Activación -->
+    <div class="slide" id="slide-3">
+        <h1>¿Sabías que...?</h1>
+        <p style="font-size: 1.5rem; color: var(--brick-red);">¿Alguna vez has sentido que tu corazón late muy fuerte después de correr?</p>
+        <div class="img-container" style="max-width: 300px;">
+            <img src="assets/concepts.png" alt="Conceptos">
+        </div>
+        <p>¡Eso es tu cuerpo trabajando al máximo! Hoy entenderemos por qué sucede.</p>
+    </div>
+
+    <!-- Slide 4: Palabras Clave -->
+    <div class="slide" id="slide-4">
+        <h1>Palabras Clave</h1>
+        <div class="options-container" style="grid-template-columns: 1fr 1fr;">
+            <div class="activity-card">
+                <h3 style="color: var(--orange)">⚡ Velocidad</h3>
+                <p style="font-size: 1rem;">Es hacer un movimiento en el menor tiempo posible. ¡Como un rayo!</p>
+            </div>
+            <div class="activity-card">
+                <h3 style="color: var(--dark-blue)">🏃‍♂️ Resistencia</h3>
+                <p style="font-size: 1rem;">Es mantener un esfuerzo físico durante mucho tiempo. ¡Como un motor sin fin!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Contenido Principal -->
+    <div class="slide" id="slide-5">
+        <h1>¿Cómo entrenamos?</h1>
+        <p>Para ser <b>Veloces</b>, hacemos carreras cortas y juegos de reacción.</p>
+        <p>Para tener <b>Resistencia</b>, caminamos, nadamos o jugamos durante más tiempo sin parar.</p>
+        <div class="img-container" style="max-width: 400px;">
+            <img src="assets/circuit.png" alt="Circuito de ejercicios">
+        </div>
+    </div>
+
+    <!-- Slide 6: Exploración Visual -->
+    <div class="slide" id="slide-6">
+        <h1>Explora el Circuito</h1>
+        <p>Haz clic en los puntos para ver qué entrenamos en cada estación.</p>
+        <div class="hotspot-container">
+            <img src="assets/circuit.png" alt="Circuito" style="width: 100%; border-radius: 10px;">
+            <div class="hotspot" style="top: 20%; left: 30%;" onclick="showInfo('¡Aquí entrenamos la VELOCIDAD! Carreras cortas de cono a cono.')">1</div>
+            <div class="hotspot" style="top: 60%; left: 70%;" onclick="showInfo('¡Aquí entrenamos la RESISTENCIA! Un trote constante alrededor del patio.')">2</div>
+        </div>
+        <div id="hotspot-text" class="hotspot-info"></div>
+    </div>
+
+    <!-- Slide 7: Actividad de Comprensión -->
+    <div class="slide" id="slide-7">
+        <h1>¡Pon a prueba tu mente!</h1>
+        <p>¿Cuál de estas actividades requiere más <b>RESISTENCIA</b>?</p>
+        <div class="options-container">
+            <button class="option-btn" onclick="checkAnswer(this, false, '¡Cerca! Pero esto es velocidad porque dura poco tiempo.')">A) Carrera de 10 metros</button>
+            <button class="option-btn" onclick="checkAnswer(this, true, '¡Exacto! Aguantar mucho tiempo caminando es resistencia.')">B) Caminata larga en el bosque</button>
+            <button class="option-btn" onclick="checkAnswer(this, false, 'El salto es potencia y velocidad, no resistencia.')">C) Un salto muy alto</button>
+        </div>
+        <div id="feedback-7" class="feedback"></div>
+        <button class="retry-btn" id="retry-7" onclick="resetActivity(7)">Intentar de nuevo</button>
+    </div>
+
+    <!-- Slide 8: Juego Educativo -->
+    <div class="slide" id="slide-8">
+        <h1>Pasos del Calentamiento</h1>
+        <p>Haz clic en el orden correcto para preparar tu cuerpo:</p>
+        <div style="display: flex; justify-content: center;">
+            <button class="step-btn" id="step-1" onclick="checkStep(1, '¡Bien! Primero movemos las articulaciones.')">1</button>
+            <button class="step-btn" id="step-2" onclick="checkStep(2, '¡Genial! Luego un trote suave para entrar en calor.')">2</button>
+            <button class="step-btn" id="step-3" onclick="checkStep(3, '¡Listo! Terminamos con estiramientos ligeros.')">3</button>
+        </div>
+        <div id="feedback-8" class="feedback"></div>
+        <button class="retry-btn" id="retry-8" onclick="resetSteps()">Reiniciar Pasos</button>
+    </div>
+
+    <!-- Slide 9: Aplicación Práctica -->
+    <div class="slide" id="slide-9">
+        <h1>Situación Real</h1>
+        <p>Estás jugando a "las traes" y quieres atrapar a alguien que está lejos. ¿Qué necesitas usar para llegar rápido?</p>
+        <div class="options-container">
+            <button class="option-btn" onclick="checkAnswer(this, true, '¡Sí! Necesitas una explosión de velocidad para atraparlo.')">Velocidad</button>
+            <button class="option-btn" onclick="checkAnswer(this, false, 'La resistencia te ayuda a seguir jugando, pero para atraparlo ahora mismo necesitas ser rápido.')">Resistencia</button>
+        </div>
+        <div id="feedback-9" class="feedback"></div>
+        <button class="retry-btn" id="retry-9" onclick="resetActivity(9)">Intentar de nuevo</button>
+    </div>
+
+    <!-- Slide 10: Repaso Final -->
+    <div class="slide" id="slide-10">
+        <h1>Repaso Flash ⚡</h1>
+        <p>Verdadero o Falso: ¿La resistencia nos ayuda a correr 100 metros en 10 segundos?</p>
+        <div class="options-container">
+            <button class="option-btn" onclick="checkAnswer(this, false, '¡Falso! Eso es velocidad pura.')">Verdadero</button>
+            <button class="option-btn" onclick="checkAnswer(this, true, '¡Correcto! Eso es una prueba de velocidad.')">Falso</button>
+        </div>
+        <div id="feedback-10" class="feedback"></div>
+        <button class="retry-btn" id="retry-10" onclick="resetActivity(10)">Intentar de nuevo</button>
+    </div>
+
+    <!-- Slide 11: Metacognición -->
+    <div class="slide" id="slide-11">
+        <h1>Para Reflexionar</h1>
+        <p>¿Qué parte de la clase te pareció más divertida?</p>
+        <div class="activity-card">
+            <p>🤔 ¿Cómo se siente mi cuerpo cuando soy rápido?</p>
+            <p>🤔 ¿Cómo me siento cuando aguanto mucho tiempo?</p>
+        </div>
+        <p>¡Tus respuestas te ayudan a conocerte mejor!</p>
+    </div>
+
+    <!-- Slide 12: Cierre -->
+    <div class="slide" id="slide-12">
+        <h1>¡Excelente trabajo, Atleta!</h1>
+        <div class="img-container" style="max-width: 250px; box-shadow: none;">
+            <img src="assets/success.png" alt="Medalla de éxito">
+        </div>
+        <p style="font-size: 1.5rem; color: var(--orange);">Has completado la Lección 6.</p>
+        <p>¡Sigue moviéndote con energía!</p>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+    let nextStep = 1;
+
+    function updateSlide() {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById(`slide-${currentSlide}`).classList.add('active');
+        
+        // Update nav buttons
+        document.getElementById('prevBtn').style.visibility = currentSlide === 1 ? 'hidden' : 'visible';
+        document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides ? 'hidden' : 'visible';
+        
+        // Update progress
+        document.getElementById('progress').style.width = `${(currentSlide / totalSlides) * 100}%`;
+
+        // Clean up hotspot info if moving away
+        document.getElementById('hotspot-text').style.display = 'none';
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides) {
+            currentSlide++;
+            updateSlide();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 1) {
+            currentSlide--;
+            updateSlide();
+        }
+    }
+
+    function showInfo(text) {
+        const info = document.getElementById('hotspot-text');
+        info.innerText = text;
+        info.style.display = 'block';
+    }
+
+    function checkAnswer(btn, isCorrect, feedbackText) {
+        const slideId = btn.closest('.slide').id.split('-')[1];
+        const feedback = document.getElementById(`feedback-${slideId}`);
+        const retry = document.getElementById(`retry-${slideId}`);
+        const options = btn.parentElement.querySelectorAll('.option-btn');
+
+        options.forEach(o => o.disabled = true);
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerText = feedbackText;
+            feedback.style.color = '#4caf50';
+        } else {
+            btn.classList.add('incorrect');
+            feedback.innerText = feedbackText;
+            feedback.style.color = '#f44336';
+            retry.style.display = 'inline-block';
+        }
+    }
+
+    function resetActivity(slideId) {
+        const slide = document.getElementById(`slide-${slideId}`);
+        const options = slide.querySelectorAll('.option-btn');
+        const feedback = document.getElementById(`feedback-${slideId}`);
+        const retry = document.getElementById(`retry-${slideId}`);
+
+        options.forEach(o => {
+            o.disabled = false;
+            o.classList.remove('correct', 'incorrect');
+        });
+        feedback.innerText = '';
+        retry.style.display = 'none';
+    }
+
+    function checkStep(stepNum, feedbackText) {
+        const feedback = document.getElementById('feedback-8');
+        const retry = document.getElementById('retry-8');
+
+        if (stepNum === nextStep) {
+            document.getElementById(`step-${stepNum}`).classList.add('done');
+            feedback.innerText = feedbackText;
+            feedback.style.color = '#4caf50';
+            nextStep++;
+            if (nextStep > 3) {
+                feedback.innerText = '¡Perfecto! Ya estás listo para el ejercicio.';
+            }
+        } else {
+            feedback.innerText = '¡Ups! Ese no es el paso siguiente. Intenta de nuevo.';
+            feedback.style.color = '#f44336';
+            retry.style.display = 'inline-block';
+        }
+    }
+
+    function resetSteps() {
+        nextStep = 1;
+        document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('done'));
+        document.getElementById('feedback-8').innerText = '';
+        document.getElementById('retry-8').style.display = 'none';
+    }
+
+    // Initialize
+    updateSlide();
+</script>
+
+</body>
+</html>
