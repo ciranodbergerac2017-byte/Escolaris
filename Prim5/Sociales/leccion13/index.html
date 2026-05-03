@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 13: Los Pueblos Indígenas en la Colonia - Colegio Escolaris</title>
+    <style>
+        :root {
+            --naranja: #db6015;
+            --amarillo: #f7be00;
+            --azul-oscuro: #244b5a;
+            --rojo: #993921;
+            --azul-claro: #f0f8ff;
+            --blanco: #ffffff;
+            --negro: #333333;
+            --gris-claro: #f4f4f4;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--azul-claro);
+            color: var(--negro);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #presentation-container {
+            width: 100%; height: 100%;
+            max-width: 1024px; max-height: 768px;
+            background-color: var(--blanco);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        #slides-wrapper { flex: 1; position: relative; width: 100%; height: 100%; }
+
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px 60px; opacity: 0; visibility: hidden;
+            transform: translateX(50px); transition: var(--transition);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        .slide.previous { transform: translateX(-50px); }
+
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 60px; height: 60px; background-color: var(--naranja);
+            color: white; border: none; border-radius: 50%;
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            z-index: 100; transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-arrow:hover { background-color: var(--rojo); transform: translateY(-50%) scale(1.1); }
+        .nav-arrow svg { width: 30px; height: 30px; fill: currentColor; }
+        #prev-btn { left: 20px; }
+        #next-btn { right: 20px; }
+        .nav-arrow.hidden { display: none; }
+
+        #progress-container { width: 100%; height: 6px; background-color: var(--gris-claro); }
+        #progress-bar { height: 100%; background: linear-gradient(90deg, var(--naranja), var(--amarillo)); width: 0%; transition: width 0.3s ease; }
+
+        h1 { color: var(--azul-oscuro); font-size: 2.2rem; margin-bottom: 20px; font-weight: bold; }
+        h2 { color: var(--naranja); font-size: 1.6rem; margin-bottom: 15px; font-weight: bold; }
+        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 15px; max-width: 800px; }
+
+        .card { background: var(--blanco); border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--naranja); margin: 10px; text-align: left; width: 100%; max-width: 700px; }
+        
+        .btn-action { padding: 12px 25px; background-color: var(--azul-oscuro); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: var(--transition); margin-top: 10px; }
+        .btn-action:hover { background-color: var(--naranja); }
+
+        .option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; width: 100%; max-width: 800px; margin-top: 15px; }
+        .option-btn { background-color: var(--blanco); border: 2px solid var(--azul-oscuro); padding: 12px; border-radius: 12px; cursor: pointer; transition: var(--transition); font-size: 1rem; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 60px; }
+        .option-btn.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .option-btn.incorrect { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+        .feedback-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.96); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; padding: 40px; display: none; text-align: center; }
+        .feedback-icon { font-size: 4rem; margin-bottom: 15px; }
+
+        .illustration { width: 100%; max-width: 450px; height: 220px; background-color: var(--gris-claro); border-radius: 20px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+
+        @media (max-width: 768px) {
+            .slide { padding: 25px 35px; }
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.3rem; }
+            p { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="presentation-container">
+        <div id="progress-container"><div id="progress-bar"></div></div>
+        <button id="prev-btn" class="nav-arrow hidden"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+        <button id="next-btn" class="nav-arrow"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button>
+
+        <div id="slides-wrapper">
+            <!-- 1. Portada -->
+            <div class="slide active">
+                <div class="illustration" style="background: linear-gradient(135deg, #db6015, #f7be00);">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="40" r="20" fill="#ffffff" opacity="0.3" />
+                        <path d="M10 80 Q50 60 90 80 L90 95 L10 95 Z" fill="#244b5a" />
+                        <rect x="45" y="60" width="10" height="20" fill="#f7be00" />
+                    </svg>
+                </div>
+                <h1>Los Pueblos Indígenas en la Colonia</h1>
+                <h2>Lección 13 • Ciencias Sociales</h2>
+                <p>5° de Primaria • Colegio Escolaris</p>
+                <p style="font-style: italic; color: var(--naranja);">Conoceremos cómo vivieron y se organizaron los pueblos originarios durante la época colonial.</p>
+            </div>
+
+            <!-- 2. Objetivos -->
+            <div class="slide">
+                <h2>Objetivos de Aprendizaje</h2>
+                <div class="card">
+                    <p>🏘️ <strong>Observar</strong> cómo se reorganizaron las poblaciones indígenas en los "Pueblos de Indios".</p>
+                </div>
+                <div class="card">
+                    <p>💼 <strong>Conocer</strong> los sistemas de trabajo impuestos (mita y encomienda).</p>
+                </div>
+                <div class="card">
+                    <p>⛪ <strong>Identificar</strong> el papel de las misiones en la formación de nuevas comunidades.</p>
+                </div>
+            </div>
+
+            <!-- 3. Activación -->
+            <div class="slide">
+                <h2>¿Sabías que...?</h2>
+                <p>Muchos de los nombres de nuestros pueblos y ciudades actuales vienen de los "Pueblos de Indios" creados hace cientos de años.</p>
+                <p><strong>¿Cómo crees que cambió la vida de un indígena al tener que vivir en un pueblo diseñado por españoles?</strong></p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="showQuickFeedback('¡Exacto! Cambiaron sus leyes, religión y forma de trabajar.', 'positive')">Cambió su organización y costumbres</button>
+                    <button class="option-btn" onclick="showQuickFeedback('Fue un cambio muy grande en su vida diaria.', 'positive')">Tuvieron que aprender un nuevo idioma</button>
+                </div>
+            </div>
+
+            <!-- 4. Palabras clave -->
+            <div class="slide">
+                <h2>Conceptos Clave</h2>
+                <div class="option-grid">
+                    <div class="card">
+                        <h3>🏠 Reducciones</h3>
+                        <p>Pueblos donde se obligaba a vivir a los indígenas para controlarlos mejor.</p>
+                    </div>
+                    <div class="card">
+                        <h3>📜 Encomienda</h3>
+                        <p>Sistema donde un grupo de indígenas debía trabajar para un español.</p>
+                    </div>
+                    <div class="card">
+                        <h3>⛪ Misiones</h3>
+                        <p>Asentamientos dirigidos por religiosos para evangelizar y educar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Contenido 1: Pueblos de Indios -->
+            <div class="slide">
+                <h2>Los "Pueblos de Indios"</h2>
+                <p>Para facilitar el cobro de impuestos y la evangelización, los españoles agruparon a los indígenas en pueblos diseñados con una plaza central e iglesia.</p>
+                <div class="card">
+                    <p>Estos pueblos tenían sus propias autoridades indígenas (caciques) que ayudaban a los españoles a organizar el trabajo.</p>
+                </div>
+                <div class="illustration" style="height: 120px;">
+                    <span style="font-size: 3rem;">🏘️ ⛪ 🏘️</span>
+                </div>
+            </div>
+
+            <!-- 6. Contenido 2: Sistemas de Trabajo -->
+            <div class="slide">
+                <h2>El Trabajo Forzado</h2>
+                <p>La vida indígena estuvo marcada por sistemas de trabajo muy duros:</p>
+                <div class="option-grid">
+                    <div class="card" style="border-left-color: var(--rojo);">
+                        <strong>La Mita:</strong> Trabajo obligatorio en las minas de plata (como en Potosí).
+                    </div>
+                    <div class="card" style="border-left-color: var(--naranja);">
+                        <strong>El Repartimiento:</strong> Turnos de trabajo en granjas o construcción.
+                    </div>
+                </div>
+                <p style="margin-top: 15px;">Esto causó que muchas familias fueran separadas y que las poblaciones disminuyeran.</p>
+            </div>
+
+            <!-- 7. Exploración Visual -->
+            <div class="slide">
+                <h2>La Misión Jesuita</h2>
+                <p>Haz clic en los puntos para ver cómo era la vida en una misión:</p>
+                <div class="illustration" style="background-color: #d2b48c; position: relative;">
+                    <svg viewBox="0 0 200 120" width="100%">
+                        <rect x="80" y="20" width="40" height="30" fill="#244b5a" class="tap-item" onclick="exploreDetail('Iglesia', 'El centro espiritual y educativo de la misión.', 'explore-info')" style="cursor:pointer" />
+                        <rect x="20" y="60" width="60" height="40" fill="#db6015" class="tap-item" onclick="exploreDetail('Talleres', 'Donde aprendían oficios como carpintería o música.', 'explore-info')" style="cursor:pointer" />
+                        <rect x="120" y="60" width="60" height="40" fill="#f7be00" class="tap-item" onclick="exploreDetail('Huertos', 'Zonas de cultivo para el sustento de la comunidad.', 'explore-info')" style="cursor:pointer" />
+                    </svg>
+                    <div id="explore-info" style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); color: white; padding: 8px; font-size: 0.9rem;">Toca un lugar de la misión.</div>
+                </div>
+            </div>
+
+            <!-- 8. Actividad: Identificación -->
+            <div class="slide">
+                <h2>Actividad de Comprensión</h2>
+                <p>¿Cómo se llamaba el sistema donde un español recibía el trabajo de un grupo de indígenas a cambio de "protegerlos"?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Correcto! La encomienda fue uno de los primeros sistemas establecidos.')">La Encomienda</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'La mita era trabajo en minas, no una concesión directa.')">La Mita</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'El Virreinato era la forma de gobierno total.')">El Virreinato</button>
+                </div>
+            </div>
+
+            <!-- 9. Juego: Verdadero o Falso -->
+            <div class="slide">
+                <h2>¿Verdadero o Falso?</h2>
+                <div class="card">
+                    <p>"En las misiones, los indígenas aprendían nuevos oficios y técnicas de cultivo."</p>
+                </div>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Muy bien! Las misiones fueron centros de enseñanza muy importantes.')">Verdadero</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, '¡Incorrecto! Las misiones sí tenían un enfoque educativo y laboral.')">Falso</button>
+                </div>
+            </div>
+
+            <!-- 10. Aplicación: Legado Cultural -->
+            <div class="slide">
+                <h2>Nuestro Legado</h2>
+                <p>A pesar de las dificultades, los pueblos indígenas mantuvieron gran parte de su cultura. ¿Cuál de estos alimentos es un regalo indígena al mundo?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Exacto! El maíz era la base de la alimentación indígena.')">🌽 El Maíz</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'La naranja fue traída por los españoles.')">🍊 La Naranja</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'El pan de trigo no es originario de América.')">🥖 El Pan de Trigo</button>
+                </div>
+            </div>
+
+            <!-- 11. Repaso Final -->
+            <div class="slide">
+                <h2>Repaso Final</h2>
+                <p>¿Qué factor ayudó a los españoles a controlar mejor a la población indígena?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Correcto! Concentrarlos en pueblos facilitaba el control.')">Agruparlos en pueblos de indios</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'Al contrario, se buscaba que vivieran juntos para vigilarlos.')">Dejarlos vivir en las selvas</button>
+                </div>
+            </div>
+
+            <!-- 12. Metacognición y Cierre -->
+            <div class="slide">
+                <div class="feedback-icon">🌿</div>
+                <h1>¡Lección Completada!</h1>
+                <p>Has aprendido sobre la resistencia y formación de los pueblos indígenas en la colonia.</p>
+                <div class="card">
+                    <p><strong>Reflexión:</strong> ¿Qué crees que fue lo más difícil para los indígenas en esta época?</p>
+                    <textarea style="width: 100%; height: 60px; margin-top: 10px; padding: 10px; border-radius: 5px;" placeholder="Escribe aquí..."></textarea>
+                </div>
+                <button class="btn-action" onclick="goToSlide(0)">Volver al Inicio</button>
+            </div>
+        </div>
+
+        <div id="feedback-overlay" class="feedback-overlay">
+            <div id="feedback-icon" class="feedback-icon"></div>
+            <h2 id="feedback-title"></h2>
+            <p id="feedback-text" style="margin: 15px 0;"></p>
+            <button id="feedback-btn" class="btn-action">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const feedbackOverlay = document.getElementById('feedback-overlay');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackBtn = document.getElementById('feedback-btn');
+
+        function updateNavigation() {
+            prevBtn.classList.toggle('hidden', currentSlide === 0);
+            nextBtn.classList.toggle('hidden', currentSlide === slides.length - 1);
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            slides.forEach((s, i) => {
+                s.classList.remove('active', 'previous');
+                if(i === currentSlide) s.classList.add('active');
+                else if(i < currentSlide) s.classList.add('previous');
+            });
+        }
+
+        function goToSlide(i) { currentSlide = i; updateNavigation(); }
+        nextBtn.onclick = () => { if(currentSlide < slides.length-1) { currentSlide++; updateNavigation(); } };
+        prevBtn.onclick = () => { if(currentSlide > 0) { currentSlide--; updateNavigation(); } };
+
+        function showQuickFeedback(msg, type) {
+            showFeedback(type === 'positive' ? '✨' : '💡', '¡Muy bien!', msg, 'Entendido', true);
+        }
+
+        function checkAnswer(btn, isCorrect, feedback) {
+            btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            setTimeout(() => {
+                showFeedback(isCorrect ? '✅' : '❌', isCorrect ? '¡Excelente!' : '¡Inténtalo de nuevo!', feedback, isCorrect ? 'Continuar' : 'Reintentar', isCorrect);
+                if(!isCorrect) btn.classList.remove('incorrect');
+            }, 400);
+        }
+
+        function exploreDetail(title, info, targetId) {
+            const infoBox = document.getElementById(targetId);
+            if(infoBox) {
+                infoBox.innerHTML = `<strong>${title}:</strong> ${info}`;
+                infoBox.style.color = 'var(--amarillo)';
+            }
+        }
+
+        function showFeedback(icon, title, text, btnText, isSuccess) {
+            feedbackIcon.innerText = icon;
+            feedbackTitle.innerText = title;
+            feedbackText.innerText = text;
+            feedbackBtn.innerText = btnText;
+            feedbackOverlay.style.display = 'flex';
+            feedbackBtn.onclick = () => {
+                feedbackOverlay.style.display = 'none';
+            };
+        }
+
+        updateNavigation();
+    </script>
+</body>
+</html>
