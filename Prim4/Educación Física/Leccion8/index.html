@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Coordinación - Educación Física - Colegio Escolaris</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="presentation-container">
+        <!-- Navigation -->
+        <button class="nav-arrow left" id="prevBtn" onclick="prevSlide()" style="display: none;">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="nav-arrow right" id="nextBtn" onclick="nextSlide()">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+
+        <!-- Slide 1: Portada -->
+        <div class="slide active" id="slide-1">
+            <div style="background: var(--primary-orange); color: white; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 20px;">
+                4° Primaria | Educación Física
+            </div>
+            <h1>La Coordinación</h1>
+            <p style="font-weight: bold; color: var(--primary-orange);">Lección 8</p>
+            <div class="illustration" style="width: 200px; height: 200px; margin: 20px 0;">
+                <svg viewBox="0 0 100 100" width="200" height="200">
+                    <circle cx="50" cy="30" r="10" fill="#244b5a"/>
+                    <rect x="45" y="40" width="10" height="30" rx="5" fill="#db6015"/>
+                    <path d="M45 45 Q30 45 30 60" stroke="#db6015" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    <path d="M55 45 Q70 45 70 60" stroke="#db6015" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    <path d="M45 70 Q40 90 35 90" stroke="#244b5a" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    <path d="M55 70 Q60 90 65 90" stroke="#244b5a" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    <circle cx="30" cy="70" r="5" fill="#f7be00"/>
+                    <circle cx="70" cy="70" r="5" fill="#f7be00"/>
+                </svg>
+            </div>
+            <p>¡Hola! Hoy aprenderemos cómo nuestro cerebro y nuestro cuerpo trabajan en equipo.</p>
+            <p style="font-style: italic;">"Moverse con ritmo es moverse con alegría"</p>
+        </div>
+
+        <!-- Slide 2: Objetivos -->
+        <div class="slide" id="slide-2">
+            <h2>¿Qué aprenderemos hoy?</h2>
+            <div class="card">
+                <p>🎯 Entender qué es la coordinación y por qué es importante.</p>
+            </div>
+            <div class="card">
+                <p>🎯 Practicar movimientos que usan nuestras manos y ojos al mismo tiempo.</p>
+            </div>
+            <div class="card">
+                <p>🎯 Descubrir cómo mejorar nuestra puntería y equilibrio.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Activación -->
+        <div class="slide" id="slide-3">
+            <h2>Pensemos un momento...</h2>
+            <p>¿Alguna vez has intentado saltar la cuerda y se te traban los pies?</p>
+            <div style="display: flex; gap: 20px; margin-top: 20px;">
+                <div class="card" style="text-align: center;">
+                    <p>🤔</p>
+                    <p>¿Por qué crees que pasa esto?</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <p>🏃‍♂️</p>
+                    <p>¿Qué parte de tu cuerpo manda la orden?</p>
+                </div>
+            </div>
+            <p style="margin-top: 20px; font-weight: bold; color: var(--primary-orange);">¡La respuesta es la Coordinación!</p>
+        </div>
+
+        <!-- Slide 4: Palabras Clave -->
+        <div class="slide" id="slide-4">
+            <h2>Palabras Mágicas</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <strong style="color: var(--primary-orange);">1. Coordinación:</strong>
+                    <p>Es la capacidad de mover diferentes partes del cuerpo de forma suave y eficiente.</p>
+                </div>
+                <div class="card">
+                    <strong style="color: var(--primary-yellow);">2. Habilidad:</strong>
+                    <p>Es lo que logramos cuando practicamos mucho un movimiento hasta que sale perfecto.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Contenido Principal (Oculo-manual) -->
+        <div class="slide" id="slide-5">
+            <h2>Coordinación Ojo-Mano</h2>
+            <div class="content-grid">
+                <div>
+                    <p>Es cuando tus ojos guían a tus manos para realizar una tarea.</p>
+                    <ul>
+                        <li>Lanzar una pelota.</li>
+                        <li>Atrapar un objeto.</li>
+                        <li>Escribir o dibujar.</li>
+                    </ul>
+                </div>
+                <div class="illustration">
+                    <svg viewBox="0 0 100 100" width="150" height="150">
+                        <circle cx="50" cy="30" r="15" fill="#f7be00" opacity="0.3"/>
+                        <path d="M20 80 Q50 20 80 80" stroke="#db6015" stroke-width="2" fill="none" stroke-dasharray="4"/>
+                        <circle cx="50" cy="35" r="8" fill="#db6015"/>
+                        <path d="M10 90 L30 70" stroke="#244b5a" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M90 90 L70 70" stroke="#244b5a" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Contenido Principal (Oculo-pedal) -->
+        <div class="slide" id="slide-6">
+            <h2>Coordinación Ojo-Pie</h2>
+            <div class="content-grid">
+                <div class="illustration">
+                    <svg viewBox="0 0 100 100" width="150" height="150">
+                        <path d="M30 90 L50 70 L70 90" fill="#244b5a" opacity="0.2"/>
+                        <circle cx="70" cy="80" r="10" fill="#f7be00"/>
+                        <path d="M30 80 L50 80" stroke="#db6015" stroke-width="8" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <p>Es cuando tus ojos guían a tus pies.</p>
+                    <p>Es muy importante en deportes como el fútbol o cuando saltamos obstáculos.</p>
+                    <p>¡Requiere mucha atención y práctica!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Exploración Visual -->
+        <div class="slide" id="slide-7">
+            <h2>¡Explora el Movimiento!</h2>
+            <p>Haz clic en los círculos para descubrir qué necesitamos para coordinar bien.</p>
+            <div style="position: relative; width: 300px; height: 300px; background: var(--bg-light-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                <svg viewBox="0 0 100 100" width="100" height="100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#244b5a" stroke-width="2" stroke-dasharray="5"/>
+                    <circle cx="50" cy="50" r="10" fill="#db6015"/>
+                </svg>
+                <button class="btn" style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%);" onclick="showExplore('Vista')">👁️ Vista</button>
+                <button class="btn" style="position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);" onclick="showExplore('Cerebro')">🧠 Cerebro</button>
+                <button class="btn" style="position: absolute; top: 50%; left: 10%; transform: translateY(-50%);" onclick="showExplore('Músculos')">💪 Músculos</button>
+                <button class="btn" style="position: absolute; top: 50%; right: 10%; transform: translateY(-50%);" onclick="showExplore('Equilibrio')">⚖️ Equilibrio</button>
+            </div>
+            <div id="explore-feedback" class="card" style="margin-top: 20px; display: none; border-color: var(--primary-yellow);">
+                <p id="explore-text"></p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Actividad de Comprensión -->
+        <div class="slide" id="slide-8">
+            <h2>¿Cuál es coordinación ojo-mano?</h2>
+            <p>Selecciona la actividad que usa principalmente tus manos guiadas por tus ojos.</p>
+            <div class="options-container" id="act1-options">
+                <div class="option" onclick="checkAct1(this, false)">Patear un penal</div>
+                <div class="option" onclick="checkAct1(this, true)">Enhebrar una aguja</div>
+                <div class="option" onclick="checkAct1(this, false)">Correr 100 metros</div>
+                <div class="option" onclick="checkAct1(this, false)">Saltar en un pie</div>
+            </div>
+            <div id="act1-feedback" class="feedback"></div>
+            <button id="act1-retry" class="btn btn-secondary" style="display: none;" onclick="retryAct1()">Intentar de nuevo</button>
+        </div>
+
+        <!-- Slide 9: Juego Educativo -->
+        <div class="slide" id="slide-9">
+            <h2>Ordena los pasos</h2>
+            <p>Para atrapar una pelota correctamente, ¿qué debemos hacer primero? Haz clic en orden.</p>
+            <div id="order-game" style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px;">
+                <button class="option" id="step-a" onclick="selectStep(this, 2)">Extender las manos</button>
+                <button class="option" id="step-b" onclick="selectStep(this, 1)">Mirar la pelota</button>
+                <button class="option" id="step-c" onclick="selectStep(this, 3)">Cerrar los dedos al contacto</button>
+            </div>
+            <div id="order-feedback" class="feedback"></div>
+            <button id="order-retry" class="btn btn-secondary" style="display: none;" onclick="retryOrder()">Reiniciar orden</button>
+        </div>
+
+        <!-- Slide 10: Aplicación Práctica -->
+        <div class="slide" id="slide-10">
+            <h2>Situación en el recreo</h2>
+            <p>Estás jugando "quemados" y viene una pelota hacia ti. ¿Qué tipo de coordinación necesitas para esquivarla o atraparla?</p>
+            <div class="options-container">
+                <div class="option" onclick="checkApp(this, true)">Coordinación General</div>
+                <div class="option" onclick="checkApp(this, false)">Solo fuerza</div>
+            </div>
+            <div id="app-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Slide 11: Repaso Final -->
+        <div class="slide" id="slide-11">
+            <h2>¡Repaso Rápido!</h2>
+            <p id="quiz-q">1. ¿La coordinación se puede mejorar con práctica?</p>
+            <div class="options-container" id="quiz-options">
+                <button class="option" onclick="checkQuiz(true)">Sí, siempre</button>
+                <button class="option" onclick="checkQuiz(false)">No, se nace así</button>
+            </div>
+            <div id="quiz-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Slide 12: Metacognición -->
+        <div class="slide" id="slide-12">
+            <h2>Reflexiona sobre tu aprendizaje</h2>
+            <div class="card">
+                <p>¿Qué fue lo más fácil de coordinar hoy?</p>
+            </div>
+            <div class="card">
+                <p>¿En qué deporte crees que eres más coordinado/a?</p>
+            </div>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 20px;">Tómate un minuto para pensar en estas respuestas.</p>
+        </div>
+
+        <!-- Slide 13: Cierre -->
+        <div class="slide" id="slide-13">
+            <h1>¡Excelente Trabajo!</h1>
+            <div class="illustration">
+                <svg viewBox="0 0 100 100" width="150" height="150">
+                    <circle cx="50" cy="50" r="45" fill="#f7be00"/>
+                    <path d="M30 50 L45 65 L70 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h2>Has completado la Lección 8</h2>
+            <p>Ahora tienes un cuerpo más inteligente y coordinado.</p>
+            <div style="background: var(--primary-orange); color: white; padding: 15px; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.8rem; margin-top: 20px;">
+                SELLO ESCOLARIS
+            </div>
+            <button class="btn" style="margin-top: 20px;" onclick="goToSlide(0)">Volver a empezar</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
