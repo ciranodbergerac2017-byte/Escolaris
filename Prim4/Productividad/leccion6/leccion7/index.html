@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 7: Control de Calidad - Colegio Escolaris</title>
+    <style>
+        :root {
+            --orange: #db6015;
+            --yellow: #f7be00;
+            --dark-blue: #244b5a;
+            --brick-red: #993921;
+            --light-blue: #f0f8ff;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-blue); color: var(--dark-blue);
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
+        }
+
+        #app-container {
+            width: 100%; max-width: 1024px; height: 100%; max-height: 768px;
+            background: var(--white); position: relative; box-shadow: var(--shadow);
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; opacity: 0; visibility: hidden;
+            transform: translateX(50px); transition: var(--transition); text-align: center;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        .slide.previous { transform: translateX(-50px); }
+
+        h1 { color: var(--orange); font-size: 2.5rem; margin-bottom: 10px; font-weight: bold; }
+        h2 { color: var(--dark-blue); font-size: 1.8rem; margin-bottom: 20px; }
+        p { font-size: 1.2rem; line-height: 1.6; max-width: 800px; }
+        .subtitle { color: var(--brick-red); font-weight: bold; margin-bottom: 5px; }
+
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 70px; height: 70px; background: var(--orange);
+            color: white; border: none; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; z-index: 100;
+            box-shadow: var(--shadow); transition: var(--transition);
+        }
+        .nav-arrow:hover { background: var(--brick-red); transform: translateY(-50%) scale(1.1); }
+        .nav-arrow:disabled { background: #ccc; cursor: not-allowed; opacity: 0.5; }
+        .arrow-left { left: 20px; }
+        .arrow-right { right: 20px; }
+        .nav-arrow svg { width: 40px; height: 40px; fill: currentColor; }
+
+        .card {
+            background: var(--light-blue); border-radius: 20px; padding: 25px;
+            margin: 15px; width: 100%; max-width: 650px;
+            border-left: 8px solid var(--orange); text-align: left;
+        }
+
+        .btn-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; width: 100%; max-width: 800px; margin-top: 20px;
+        }
+
+        .interactive-btn {
+            background: var(--white); border: 3px solid var(--dark-blue);
+            padding: 15px 20px; border-radius: 15px; font-size: 1.1rem;
+            font-weight: bold; cursor: pointer; transition: var(--transition);
+            color: var(--dark-blue); outline: none;
+        }
+        .interactive-btn:hover { background: var(--yellow); border-color: var(--orange); transform: translateY(-3px); }
+        .interactive-btn.correct { background: #4caf50 !important; color: white !important; border-color: #388e3c !important; }
+        .interactive-btn.incorrect { background: #f44336 !important; color: white !important; border-color: #d32f2f !important; }
+
+        #feedback {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px);
+            width: 80%; max-width: 500px; padding: 20px; border-radius: 15px;
+            text-align: center; font-weight: bold; z-index: 200; transition: var(--transition);
+            opacity: 0; pointer-events: none;
+        }
+        #feedback.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .feedback-success { background: #dff0d8; color: #3c763d; border: 2px solid #3c763d; }
+        .feedback-error { background: #f2dede; color: #a94442; border: 2px solid #a94442; }
+
+        .progress-bar {
+            position: absolute; bottom: 0; left: 0; height: 8px;
+            background: var(--yellow); transition: width 0.5s ease;
+        }
+
+        /* Factory Exploration Styles */
+        .factory-map {
+            display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+        }
+        .step-circle {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: var(--white); border: 4px solid var(--dark-blue);
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; cursor: pointer; transition: var(--transition);
+        }
+        .step-circle:hover { border-color: var(--orange); transform: scale(1.1); background: var(--light-blue); }
+        .step-number { font-size: 1.5rem; font-weight: bold; color: var(--orange); }
+
+        @media (max-width: 600px) {
+            .slide { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .nav-arrow { width: 50px; height: 50px; }
+            .btn-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <!-- Diapositiva 1: Portada -->
+    <div class="slide active" id="slide-1">
+        <div style="font-size: 4rem; margin-bottom: 20px;">⚙️</div>
+        <p class="subtitle">PRODUCTIVIDAD Y DESARROLLO • 4° PRIMARIA</p>
+        <h1>Control de Calidad</h1>
+        <p class="subtitle">Lección 7</p>
+        <div style="background: var(--dark-blue); color: white; padding: 15px 30px; border-radius: 50px; margin-top: 20px; font-weight: bold;">
+            ¡Hacer bien las cosas desde el principio!
+        </div>
+    </div>
+
+    <!-- Diapositiva 2: Objetivos -->
+    <div class="slide" id="slide-2">
+        <h2>🎯 Objetivos de la Lección</h2>
+        <div class="card">
+            <p>✅ <strong>Comprender</strong> la importancia de seguir normas para lograr buenos resultados.</p>
+            <p>✅ <strong>Aprender</strong> que revisar nuestro trabajo es parte del éxito.</p>
+            <p>✅ <strong>Identificar</strong> parámetros para saber si algo tiene calidad.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 3: Activación -->
+    <div class="slide" id="slide-3">
+        <h2>🧐 ¿Cuál elegirías tú?</h2>
+        <p>Imagina que compras un juguete nuevo. ¿Cuál te gustaría recibir?</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Exacto! La calidad nos da seguridad y alegría.', true)">🧸 Un juguete resistente y bien pintado</button>
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Oh no! Eso sería decepcionante. ¡Busca la mejor opción!', false)">🏚️ Un juguete con piezas sueltas y rayado</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 4: Palabras Clave -->
+    <div class="slide" id="slide-4">
+        <h2>📚 Conceptos Clave</h2>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+            <div class="card" style="max-width: 250px; border-color: var(--yellow);">
+                <center style="font-size: 2rem;">✨</center>
+                <strong>Calidad:</strong> Cuando un producto cumple con lo que promete y está bien hecho.
+            </div>
+            <div class="card" style="max-width: 250px; border-color: var(--brick-red);">
+                <center style="font-size: 2rem;">📏</center>
+                <strong>Parámetro:</strong> Una regla o medida para revisar si algo está correcto.
+            </div>
+            <div class="card" style="max-width: 250px; border-color: var(--dark-blue);">
+                <center style="font-size: 2rem;">🛡️</center>
+                <strong>Normas:</strong> Pasos obligatorios para asegurar un buen resultado.
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 5: Contenido Principal 1 -->
+    <div class="slide" id="slide-5">
+        <h2>🤔 ¿Qué es el Control de Calidad?</h2>
+        <p>Es como ser un **detective**. Revisamos nuestro trabajo en cada paso para asegurarnos de que no hay errores.</p>
+        <div class="card">
+            <p>• <strong>Antes:</strong> Preparar materiales limpios.</p>
+            <p>• <strong>Durante:</strong> Seguir las instrucciones con cuidado.</p>
+            <p>• <strong>Después:</strong> Revisar el resultado final antes de entregarlo.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 6: Contenido Principal 2 -->
+    <div class="slide" id="slide-6">
+        <h2>🚀 ¿Por qué es importante?</h2>
+        <p>Hacer las cosas bien nos ayuda a:</p>
+        <div class="card" style="border-color: var(--brick-red);">
+            <p>1. <strong>Ahorrar tiempo:</strong> No tenemos que repetir el trabajo.</p>
+            <p>2. <strong>Cuidar recursos:</strong> No desperdiciamos materiales.</p>
+            <p>3. <strong>Ganar confianza:</strong> Los demás saben que pueden contar con nosotros.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 7: Contenido Principal 3 -->
+    <div class="slide" id="slide-7">
+        <h2>🛠️ Los Parámetros</h2>
+        <p>Para medir la calidad, usamos "preguntas de chequeo". Por ejemplo, al hacer una tarea:</p>
+        <div class="card" style="border-color: var(--dark-blue);">
+            <p>❓ ¿Tiene buena letra y limpieza?</p>
+            <p>❓ ¿Seguí todas las instrucciones del profesor?</p>
+            <p>❓ ¿Revisé la ortografía?</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 8: Exploración Visual -->
+    <div class="slide" id="slide-8">
+        <h2>🔍 Explora la "Línea de Producción"</h2>
+        <p>Haz clic en cada estación para ver cómo se asegura la calidad.</p>
+        <div class="factory-map">
+            <div class="step-circle" onclick="showQuickFeedback('ESTACIÓN 1: Revisamos que los materiales sean los correctos.', true)">
+                <span class="step-number">1</span>
+                <span>📦 Insumos</span>
+            </div>
+            <div class="step-circle" onclick="showQuickFeedback('ESTACIÓN 2: Seguimos la receta o pasos sin saltarnos nada.', true)">
+                <span class="step-number">2</span>
+                <span>⚡ Proceso</span>
+            </div>
+            <div class="step-circle" onclick="showQuickFeedback('ESTACIÓN 3: Una última revisión antes de que salga al cliente.', true)">
+                <span class="step-number">3</span>
+                <span>🏁 Final</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 9: Actividad de Comprensión -->
+    <div class="slide" id="slide-9">
+        <h2>🎯 Identifica la Calidad</h2>
+        <p>¿Cuál de estas acciones demuestra un buen control de calidad?</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="checkActivity(this, false, '¡No! Hacerlo rápido suele causar errores. ¡Reintenta!')">Terminar lo más rápido posible</button>
+            <button class="interactive-btn" onclick="checkActivity(this, true, '¡Excelente! Revisar ayuda a encontrar pequeños errores antes de que sea tarde.')">Revisar el trabajo 2 veces antes de entregar</button>
+            <button class="interactive-btn" onclick="checkActivity(this, false, '¡Cuidado! Si no revisas, podrías entregar algo incompleto. ¡Busca otra opción!')">Entregar sin mirar el resultado final</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 10: Juego Educativo -->
+    <div class="slide" id="slide-10">
+        <h2>🎮 El Orden de la Calidad</h2>
+        <p>Para hacer un pastel con calidad, ¿qué paso va primero?</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="checkActivity(this, true, '¡Correcto! Primero debemos asegurar que los ingredientes estén frescos y listos.')">Paso A: Revisar que los ingredientes estén bien</button>
+            <button class="interactive-btn" onclick="checkActivity(this, false, '¡Aún no! No puedes decorar si no has preparado la mezcla. ¡Intenta de nuevo!')">Paso B: Decorar el pastel con chispas</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 11: Metacognición -->
+    <div class="slide" id="slide-11">
+        <h2>💭 ¿Qué aprendí hoy?</h2>
+        <p>¿Cómo puedes aplicar el control de calidad en tu vida diaria?</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Súper! Tu cuarto se verá increíble.', true)">Al ordenar mis juguetes</button>
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Fantástico! Tus notas mejorarán mucho.', true)">Al hacer mis tareas</button>
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Muy bien! Cuidar tu ropa es parte de la calidad.', true)">Al doblar mi ropa</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 12: Cierre -->
+    <div class="slide" id="slide-12">
+        <div style="font-size: 5rem;">🏅</div>
+        <h1>¡Maestro de la Calidad!</h1>
+        <p>Has aprendido que hacer bien las cosas nos hace mejores personas y profesionales.</p>
+        <p style="color: var(--orange); font-weight: bold;">¡Sigue aplicando la excelencia en todo lo que hagas!</p>
+        <div style="margin-top: 20px;">
+             <button class="interactive-btn" style="background: var(--orange); color: white;" onclick="resetApp()">Reiniciar Lección</button>
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <button class="nav-arrow arrow-left" id="prevBtn" onclick="changeSlide(-1)">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </button>
+    <button class="nav-arrow arrow-right" id="nextBtn" onclick="changeSlide(1)">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+    </button>
+
+    <div id="feedback"></div>
+    <div class="progress-bar" id="progress"></div>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+
+    function updateNav() {
+        document.getElementById('prevBtn').disabled = currentSlide === 1;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+        const progress = (currentSlide / totalSlides) * 100;
+        document.getElementById('progress').style.width = progress + '%';
+    }
+
+    function changeSlide(direction) {
+        const oldSlide = document.getElementById(`slide-${currentSlide}`);
+        const nextIdx = currentSlide + direction;
+        if (nextIdx < 1 || nextIdx > totalSlides) return;
+
+        currentSlide = nextIdx;
+        const newSlide = document.getElementById(`slide-${currentSlide}`);
+
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active', 'previous'));
+        oldSlide.classList.add(direction > 0 ? 'previous' : '');
+        newSlide.classList.add('active');
+        hideFeedback();
+        updateNav();
+    }
+
+    function showQuickFeedback(message, isSuccess) {
+        const fb = document.getElementById('feedback');
+        fb.textContent = message;
+        fb.className = isSuccess ? 'feedback-success show' : 'feedback-error show';
+        if (isSuccess) setTimeout(() => hideFeedback(), 3000);
+    }
+
+    function hideFeedback() {
+        document.getElementById('feedback').classList.remove('show');
+    }
+
+    function checkActivity(btn, isCorrect, message) {
+        const siblings = btn.parentElement.querySelectorAll('.interactive-btn');
+        siblings.forEach(s => s.classList.remove('correct', 'incorrect'));
+        if (isCorrect) {
+            btn.classList.add('correct');
+            showQuickFeedback(message, true);
+        } else {
+            btn.classList.add('incorrect');
+            showQuickFeedback(message, false);
+        }
+    }
+
+    function resetApp() {
+        currentSlide = 1;
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active', 'previous'));
+        document.getElementById('slide-1').classList.add('active');
+        document.querySelectorAll('.interactive-btn').forEach(b => b.classList.remove('correct', 'incorrect'));
+        updateNav();
+    }
+
+    updateNav();
+</script>
+
+</body>
+</html>
