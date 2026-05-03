@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zumba para Niños - Guía Didáctica</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="presentation-container">
+        <!-- Navigation Arrows -->
+        <button id="prev-btn" class="nav-arrow" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button id="next-btn" class="nav-arrow" aria-label="Siguiente">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+
+        <div id="slides-wrapper">
+            <!-- Slide 1: Portada -->
+            <section class="slide active" id="slide-1">
+                <div class="content">
+                    <div class="badge">4° Primaria | Educación Física</div>
+                    <h1>Zumba para Niños</h1>
+                    <p class="subtitle">Lección 7: Ritmo, Energía y Diversión</p>
+                    <div class="illustration-container">
+                        <div class="zumba-icon">💃🕺</div>
+                    </div>
+                    <p class="welcome-msg">¡Hola! ¿Estás listo para mover el cuerpo al ritmo de la música? ¡Empecemos!</p>
+                </div>
+            </section>
+
+            <!-- Slide 2: Objetivos -->
+            <section class="slide" id="slide-2">
+                <div class="content">
+                    <h2>¿Qué aprenderemos hoy?</h2>
+                    <ul class="goals-list">
+                        <li><span>🎯</span> Practicar actividades físico-deportivas con alegría.</li>
+                        <li><span>⚡</span> Reconocer nuestras posibilidades de movimiento y esfuerzo.</li>
+                        <li><span>🕺</span> Seguir ritmos musicales coordinando pasos de baile.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 3: Activación -->
+            <section class="slide" id="slide-3">
+                <div class="content">
+                    <h2>Antes de empezar...</h2>
+                    <p>Reflexiona con estas preguntas:</p>
+                    <div class="activation-grid">
+                        <div class="question-card">
+                            <p>¿Qué sientes cuando escuchas tu canción favorita?</p>
+                            <div class="icons">🎵 💃 ✨</div>
+                        </div>
+                        <div class="question-card">
+                            <p>¿Sabías que bailar es un gran ejercicio para el corazón?</p>
+                            <div class="icons">❤️ 🏃‍♂️ 🔋</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Palabras clave -->
+            <section class="slide" id="slide-4">
+                <div class="content">
+                    <h2>Palabras clave</h2>
+                    <div class="keywords-container">
+                        <div class="keyword-item">
+                            <div class="key-title">Ritmo</div>
+                            <div class="key-desc">El orden de los sonidos que nos invita a movernos.</div>
+                        </div>
+                        <div class="keyword-item">
+                            <div class="key-title">Coordinación</div>
+                            <div class="key-desc">Mover diferentes partes del cuerpo con control.</div>
+                        </div>
+                        <div class="keyword-item">
+                            <div class="key-title">Resistencia</div>
+                            <div class="key-desc">Capacidad de movernos sin cansarnos rápido.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Contenido principal -->
+            <section class="slide" id="slide-5">
+                <div class="content">
+                    <h2>¿Qué es la Zumba?</h2>
+                    <div class="info-block">
+                        <p>La Zumba es una mezcla de <strong>baile y ejercicio</strong> con ritmos modernos.</p>
+                        <p>No necesitas ser un experto, el objetivo es:</p>
+                        <ul class="check-list">
+                            <li>✅ Expresar tus emociones.</li>
+                            <li>✅ Mejorar tu salud física.</li>
+                            <li>✅ ¡Divertirte al máximo!</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Exploración visual -->
+            <section class="slide" id="slide-6">
+                <div class="content">
+                    <h2>Explora los beneficios</h2>
+                    <p>Haz clic en cada botón para descubrirlo:</p>
+                    <div class="explorer-grid">
+                        <button class="explorer-btn" data-info="¡Tu corazón late con más fuerza y salud!">❤️ Corazón</button>
+                        <button class="explorer-btn" data-info="Tus músculos se vuelven más fuertes y ágiles.">💪 Músculos</button>
+                        <button class="explorer-btn" data-info="¡Al bailar liberas estrés y te sientes feliz!">😊 Ánimo</button>
+                    </div>
+                    <div id="explorer-display" class="feedback-box">Haz clic arriba para explorar.</div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Actividad de comprensión -->
+            <section class="slide" id="slide-7">
+                <div class="content">
+                    <h2>¿Cuánto sabes?</h2>
+                    <p>¿Cuál de estos es fundamental en la Zumba?</p>
+                    <div class="options-grid" id="quiz-1">
+                        <button class="option-btn" data-correct="false">Estar sentado</button>
+                        <button class="option-btn" data-correct="true">Seguir el ritmo</button>
+                        <button class="option-btn" data-correct="false">No moverse</button>
+                    </div>
+                    <div id="quiz-1-feedback" class="feedback-box hidden"></div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Juego educativo -->
+            <section class="slide" id="slide-8">
+                <div class="content">
+                    <h2>Ordena los pasos</h2>
+                    <p>¿Qué hacemos primero? Haz clic en orden (1, 2, 3):</p>
+                    <div class="order-grid" id="game-order">
+                        <button class="order-btn" data-step="2">Mover el cuerpo</button>
+                        <button class="order-btn" data-step="1">Escuchar el ritmo</button>
+                        <button class="order-btn" data-step="3">¡Sonreír y disfrutar!</button>
+                    </div>
+                    <div id="order-feedback" class="feedback-box hidden"></div>
+                    <button id="reset-order" class="secondary-btn hidden">Intentar de nuevo</button>
+                </div>
+            </section>
+
+            <!-- Slide 9: Aplicación práctica -->
+            <section class="slide" id="slide-9">
+                <div class="content">
+                    <h2>Bailar en casa</h2>
+                    <p>Si te sientes cansado de estudiar, ¿qué pasaría si bailas una canción?</p>
+                    <div class="options-grid" id="practice-quiz">
+                        <button class="option-btn" data-correct="true">Me sentiría con más energía</button>
+                        <button class="option-btn" data-correct="false">Me daría mucho sueño</button>
+                    </div>
+                    <div id="practice-feedback" class="feedback-box hidden"></div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Repaso final -->
+            <section class="slide" id="slide-10">
+                <div class="content">
+                    <h2>Repaso Final</h2>
+                    <p>¿Es verdad que la Zumba ayuda a la coordinación?</p>
+                    <div class="vf-grid">
+                        <button class="vf-btn" data-ans="v">¡Sí, es verdad!</button>
+                        <button class="vf-btn" data-ans="f">No, es mentira</button>
+                    </div>
+                    <div id="repaso-feedback" class="feedback-box hidden"></div>
+                </div>
+            </section>
+
+            <!-- Slide 11: Metacognición -->
+            <section class="slide" id="slide-11">
+                <div class="content">
+                    <h2>¿Qué aprendí hoy?</h2>
+                    <div class="reflection-card">
+                        <p>¿Cuál fue tu paso de baile favorito de imaginar?</p>
+                        <p>¿Por qué es importante moverse todos los días?</p>
+                    </div>
+                    <div class="icons-large">🧠 ✨ 🏃‍♂️</div>
+                </div>
+            </section>
+
+            <!-- Slide 12: Cierre -->
+            <section class="slide" id="slide-12">
+                <div class="content">
+                    <div class="success-icon">🏆</div>
+                    <h2>¡Felicidades!</h2>
+                    <p>Has completado el libro digital de Zumba. ¡Sigue moviéndote!</p>
+                    <div class="badge-final">Colegio Escolaris</div>
+                    <button class="restart-btn" onclick="location.reload()">Empezar de nuevo</button>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
