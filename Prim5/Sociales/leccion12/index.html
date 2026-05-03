@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 12: La Época Colonial en América - Colegio Escolaris</title>
+    <style>
+        :root {
+            --naranja: #db6015;
+            --amarillo: #f7be00;
+            --azul-oscuro: #244b5a;
+            --rojo: #993921;
+            --azul-claro: #f0f8ff;
+            --blanco: #ffffff;
+            --negro: #333333;
+            --gris-claro: #f4f4f4;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--azul-claro);
+            color: var(--negro);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #presentation-container {
+            width: 100%;
+            height: 100%;
+            max-width: 1024px;
+            max-height: 768px;
+            background-color: var(--blanco);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #slides-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 60px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(50px);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .slide.previous {
+            transform: translateX(-50px);
+        }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background-color: var(--naranja);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-arrow:hover { background-color: var(--rojo); transform: translateY(-50%) scale(1.1); }
+        .nav-arrow:active { transform: translateY(-50%) scale(0.95); }
+        .nav-arrow svg { width: 30px; height: 30px; fill: currentColor; }
+        #prev-btn { left: 20px; }
+        #next-btn { right: 20px; }
+        .nav-arrow.hidden { display: none; }
+
+        #progress-container { width: 100%; height: 6px; background-color: var(--gris-claro); position: relative; }
+        #progress-bar { height: 100%; background: linear-gradient(90deg, var(--naranja), var(--amarillo)); width: 0%; transition: width 0.3s ease; }
+
+        h1 { color: var(--azul-oscuro); font-size: 2.2rem; margin-bottom: 20px; font-weight: bold; }
+        h2 { color: var(--naranja); font-size: 1.6rem; margin-bottom: 15px; font-weight: bold; }
+        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 15px; max-width: 800px; }
+
+        .btn-action { padding: 12px 25px; background-color: var(--azul-oscuro); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: var(--transition); margin-top: 10px; }
+        .btn-action:hover { background-color: var(--naranja); }
+
+        .card { background: var(--blanco); border-radius: 15px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--naranja); margin: 10px; text-align: left; width: 100%; max-width: 700px; }
+
+        .option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; width: 100%; max-width: 800px; margin-top: 15px; }
+        .option-btn { background-color: var(--blanco); border: 2px solid var(--azul-oscuro); padding: 12px; border-radius: 12px; cursor: pointer; transition: var(--transition); font-size: 1rem; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 60px; }
+        .option-btn:hover { background-color: var(--azul-claro); border-color: var(--naranja); }
+        .option-btn.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .option-btn.incorrect { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+        .feedback-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.96); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; padding: 40px; display: none; text-align: center; }
+        .feedback-icon { font-size: 4rem; margin-bottom: 15px; }
+
+        .illustration { width: 100%; max-width: 450px; height: 220px; background-color: var(--gris-claro); border-radius: 20px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+        
+        .pyramid { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 400px; }
+        .pyramid-level { width: 100%; padding: 10px; margin: 2px; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        
+        @media (max-width: 768px) {
+            .slide { padding: 25px 35px; }
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.3rem; }
+            p { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="presentation-container">
+        <div id="progress-container"><div id="progress-bar"></div></div>
+        <button id="prev-btn" class="nav-arrow hidden"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+        <button id="next-btn" class="nav-arrow"><svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button>
+
+        <div id="slides-wrapper">
+            <!-- 1. Portada -->
+            <div class="slide active">
+                <div class="illustration" style="background: linear-gradient(135deg, #244b5a, #993921);">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="20" y="40" width="60" height="40" fill="#f7be00" />
+                        <path d="M15 40 L50 15 L85 40 Z" fill="#993921" />
+                        <rect x="42" y="60" width="16" height="20" fill="#333" />
+                    </svg>
+                </div>
+                <h1>La Época Colonial en América</h1>
+                <h2>Lección 12 • Ciencias Sociales</h2>
+                <p>5° de Primaria • Colegio Escolaris</p>
+                <p style="font-style: italic; color: var(--naranja);">¿Cómo se vivía en América después de la llegada de los españoles? ¡Vamos a descubrirlo!</p>
+            </div>
+
+            <!-- 2. Objetivos -->
+            <div class="slide">
+                <h2>Objetivos de la Clase</h2>
+                <div class="card">
+                    <p>🏛️ <strong>Conocer</strong> cómo se organizaba el gobierno y la sociedad colonial.</p>
+                </div>
+                <div class="card">
+                    <p>🏘️ <strong>Observar</strong> la forma de vida y las actividades de las personas en esa época.</p>
+                </div>
+                <div class="card">
+                    <p>🎨 <strong>Identificar</strong> las mezclas culturales que surgieron (mestizaje).</p>
+                </div>
+            </div>
+
+            <!-- 3. Activación -->
+            <div class="slide">
+                <h2>Imagina un día sin...</h2>
+                <p>En la época colonial no existía la electricidad, ni los autos, ni los supermercados. ¿Cómo crees que se iluminaban las casas por la noche?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="showQuickFeedback('¡Exacto! Las velas de sebo eran fundamentales.', 'positive')">Con velas y lámparas de aceite</button>
+                    <button class="option-btn" onclick="showQuickFeedback('¡Casi! Pero en esa época el gas aún no se usaba así.', 'positive')">Con estufas de gas</button>
+                </div>
+                <div class="illustration" style="height: 120px; background: none;">
+                    <span style="font-size: 3rem;">🕯️ 🏛️ 🐎</span>
+                </div>
+            </div>
+
+            <!-- 4. Palabras clave -->
+            <div class="slide">
+                <h2>Palabras Importantes</h2>
+                <div class="option-grid">
+                    <div class="card">
+                        <h3>👑 Virreinato</h3>
+                        <p>Territorio gobernado por un virrey en nombre del rey de España.</p>
+                    </div>
+                    <div class="card">
+                        <h3>👨‍👩‍👧‍👦 Mestizaje</h3>
+                        <p>La mezcla biológica y cultural entre distintos grupos étnicos.</p>
+                    </div>
+                    <div class="card">
+                        <h3>🪙 Monopolio</h3>
+                        <p>Control exclusivo del comercio entre España y sus colonias.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Contenido 1: Organización -->
+            <div class="slide">
+                <h2>El Gobierno Colonial</h2>
+                <p>El territorio americano era inmenso, así que España lo dividió en <strong>Virreinatos</strong>. Los más importantes fueron:</p>
+                <div class="card">
+                    <p>📍 <strong>Virreinato de Nueva España</strong> (México y Centroamérica).</p>
+                    <p>📍 <strong>Virreinato del Perú</strong> (Gran parte de Sudamérica).</p>
+                </div>
+                <p>El <strong>Virrey</strong> era el representante directo del Rey en América.</p>
+            </div>
+
+            <!-- 6. Contenido 2: Sociedad -->
+            <div class="slide">
+                <h2>La Pirámide Social</h2>
+                <p>La sociedad colonial era muy desigual y se basaba en el origen de las personas:</p>
+                <div class="pyramid">
+                    <div class="pyramid-level" style="background: var(--rojo); width: 60%;" onclick="exploreDetail('Españoles', 'Nacidos en España, tenían los cargos más altos.', 'pyramid-info')">Españoles</div>
+                    <div class="pyramid-level" style="background: var(--naranja); width: 75%;" onclick="exploreDetail('Criollos', 'Hijos de españoles nacidos en América.', 'pyramid-info')">Criollos</div>
+                    <div class="pyramid-level" style="background: var(--amarillo); width: 90%; color: var(--negro);" onclick="exploreDetail('Mestizos', 'Mezcla de españoles e indígenas.', 'pyramid-info')">Mestizos</div>
+                    <div class="pyramid-level" style="background: var(--azul-oscuro); width: 100%;" onclick="exploreDetail('Indígenas y Esclavos', 'Trabajaban en minas y campo.', 'pyramid-info')">Indígenas y otros</div>
+                </div>
+                <p id="pyramid-info" style="margin-top: 10px; font-weight: bold;">Haz clic en cada nivel para aprender más.</p>
+            </div>
+
+            <!-- 7. Exploración Visual -->
+            <div class="slide">
+                <h2>La Plaza Mayor</h2>
+                <p>Era el centro de la vida social, política y religiosa. Toca los elementos para explorar:</p>
+                <div class="illustration" style="background-color: #e8d5b5; position: relative;">
+                    <svg viewBox="0 0 200 120" width="100%">
+                        <!-- Cathedral -->
+                        <rect x="20" y="30" width="40" height="60" fill="#993921" class="tap-item" onclick="exploreDetail('La Catedral', 'Donde se realizaban las ceremonias religiosas.', 'explore-info')" style="cursor:pointer" />
+                        <!-- Cabildo -->
+                        <rect x="140" y="40" width="40" height="50" fill="#244b5a" class="tap-item" onclick="exploreDetail('El Cabildo', 'Sede del gobierno de la ciudad.', 'explore-info')" style="cursor:pointer" />
+                        <!-- Fountain -->
+                        <circle cx="100" cy="80" r="10" fill="#f7be00" class="tap-item" onclick="exploreDetail('La Fuente', 'Lugar donde la gente recolectaba agua y conversaba.', 'explore-info')" style="cursor:pointer" />
+                    </svg>
+                    <div id="explore-info" style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; padding: 5px;">Toca un edificio de la plaza.</div>
+                </div>
+            </div>
+
+            <!-- 8. Actividad: Comprensión -->
+            <div class="slide">
+                <h2>¿Quién gobernaba?</h2>
+                <p>¿Quién era el máximo representante del Rey en las colonias americanas?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, false, '¡Casi! El Alcalde solo mandaba en la ciudad.')">El Alcalde</button>
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Correcto! El Virrey era el &quot;otro yo&quot; del Rey en América.')">El Virrey</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'No, el Escribano se encargaba de los documentos.')">El Escribano</button>
+                </div>
+            </div>
+
+            <!-- 9. Juego Educativo -->
+            <div class="slide">
+                <h2>Cierto o Falso</h2>
+                <div class="card">
+                    <p id="game-question">"Los criollos eran personas nacidas en España que vivían en América."</p>
+                </div>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, false, '¡Incorrecto! Recuerda: los criollos nacieron en América.')">Cierto</button>
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Muy bien! Los criollos eran hijos de españoles pero nacidos en el continente americano.')">Falso</button>
+                </div>
+            </div>
+
+            <!-- 10. Aplicación Práctica -->
+            <div class="slide">
+                <h2>Actividades Económicas</h2>
+                <p>¿Cuál era la actividad que más riqueza daba a España durante la colonia?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Exacto! El oro y la plata eran el motor de la economía.')">⛏️ La Minería</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'La pesca era importante para comer, pero no la principal riqueza.')">🐟 La Pesca</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'El turismo no existía como actividad económica en esa época.')">🏖️ El Turismo</button>
+                </div>
+            </div>
+
+            <!-- 11. Repaso Final -->
+            <div class="slide">
+                <h2>Repaso de la Época</h2>
+                <p>¿Cómo se llamó al proceso de mezcla de culturas y personas?</p>
+                <div class="option-grid">
+                    <button class="option-btn" onclick="checkAnswer(this, true, '¡Excelente! El mestizaje define nuestra identidad actual.')">Mestizaje</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false, 'La independencia ocurrió mucho después.')">Independencia</button>
+                </div>
+            </div>
+
+            <!-- 12. Metacognición y Cierre -->
+            <div class="slide">
+                <div class="feedback-icon">🌟</div>
+                <h1>¡Increíble trabajo!</h1>
+                <p>Hoy has aprendido cómo se formó la sociedad en la que vivimos hoy en día.</p>
+                <div class="card">
+                    <p><strong>Reflexión:</strong> ¿Qué parte de la vida colonial te pareció más curiosa o diferente a la de ahora?</p>
+                    <textarea style="width: 100%; height: 60px; margin-top: 10px; padding: 10px; border-radius: 5px;"></textarea>
+                </div>
+                <button class="btn-action" onclick="goToSlide(0)">Finalizar Lección</button>
+            </div>
+        </div>
+
+        <div id="feedback-overlay" class="feedback-overlay">
+            <div id="feedback-icon" class="feedback-icon"></div>
+            <h2 id="feedback-title"></h2>
+            <p id="feedback-text" style="margin: 15px 0;"></p>
+            <button id="feedback-btn" class="btn-action">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const feedbackOverlay = document.getElementById('feedback-overlay');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackBtn = document.getElementById('feedback-btn');
+
+        function updateNavigation() {
+            prevBtn.classList.toggle('hidden', currentSlide === 0);
+            nextBtn.classList.toggle('hidden', currentSlide === slides.length - 1);
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            slides.forEach((s, i) => {
+                s.classList.remove('active', 'previous');
+                if(i === currentSlide) s.classList.add('active');
+                else if(i < currentSlide) s.classList.add('previous');
+            });
+        }
+
+        function goToSlide(i) { currentSlide = i; updateNavigation(); }
+        nextBtn.onclick = () => { if(currentSlide < slides.length-1) { currentSlide++; updateNavigation(); } };
+        prevBtn.onclick = () => { if(currentSlide > 0) { currentSlide--; updateNavigation(); } };
+
+        function showQuickFeedback(msg, type) {
+            showFeedback(type === 'positive' ? '✨' : '💡', '¡Muy bien!', msg, 'Entendido', true);
+        }
+
+        function checkAnswer(btn, isCorrect, feedback) {
+            btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            setTimeout(() => {
+                showFeedback(isCorrect ? '✅' : '❌', isCorrect ? '¡Excelente!' : '¡Inténtalo de nuevo!', feedback, isCorrect ? 'Continuar' : 'Reintentar', isCorrect);
+                if(!isCorrect) btn.classList.remove('incorrect');
+            }, 400);
+        }
+
+        function exploreDetail(title, info, targetId) {
+            const infoBox = document.getElementById(targetId);
+            if (infoBox) {
+                infoBox.innerHTML = `<strong>${title}:</strong> ${info}`;
+                infoBox.style.color = 'var(--naranja)';
+            }
+        }
+
+        function showFeedback(icon, title, text, btnText, isSuccess) {
+            feedbackIcon.innerText = icon;
+            feedbackTitle.innerText = title;
+            feedbackText.innerText = text;
+            feedbackBtn.innerText = btnText;
+            feedbackOverlay.style.display = 'flex';
+            feedbackBtn.onclick = () => {
+                feedbackOverlay.style.display = 'none';
+                if(isSuccess && currentSlide < slides.length - 1) { /* Opcional auto-avance */ }
+            };
+        }
+
+        updateNavigation();
+    </script>
+</body>
+</html>
