@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 8: Convivencia en Comunidad - Colegio Escolaris</title>
+    <style>
+        :root {
+            --orange: #db6015;
+            --yellow: #f7be00;
+            --dark-blue: #244b5a;
+            --brick-red: #993921;
+            --light-blue: #f0f8ff;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-blue); color: var(--dark-blue);
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
+        }
+
+        #app-container {
+            width: 100%; max-width: 1024px; height: 100%; max-height: 768px;
+            background: var(--white); position: relative; box-shadow: var(--shadow);
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; opacity: 0; visibility: hidden;
+            transform: translateX(50px); transition: var(--transition); text-align: center;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        .slide.previous { transform: translateX(-50px); }
+
+        h1 { color: var(--orange); font-size: 2.5rem; margin-bottom: 10px; font-weight: bold; }
+        h2 { color: var(--dark-blue); font-size: 1.8rem; margin-bottom: 20px; }
+        p { font-size: 1.2rem; line-height: 1.6; max-width: 800px; }
+        .subtitle { color: var(--brick-red); font-weight: bold; margin-bottom: 5px; }
+
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 70px; height: 70px; background: var(--orange);
+            color: white; border: none; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; z-index: 100;
+            box-shadow: var(--shadow); transition: var(--transition);
+        }
+        .nav-arrow:hover { background: var(--brick-red); transform: translateY(-50%) scale(1.1); }
+        .nav-arrow:disabled { background: #ccc; cursor: not-allowed; opacity: 0.5; }
+        .arrow-left { left: 20px; }
+        .arrow-right { right: 20px; }
+        .nav-arrow svg { width: 40px; height: 40px; fill: currentColor; }
+
+        .card {
+            background: var(--light-blue); border-radius: 20px; padding: 25px;
+            margin: 15px; width: 100%; max-width: 650px;
+            border-left: 8px solid var(--orange); text-align: left;
+        }
+
+        .btn-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; width: 100%; max-width: 800px; margin-top: 20px;
+        }
+
+        .interactive-btn {
+            background: var(--white); border: 3px solid var(--dark-blue);
+            padding: 15px 20px; border-radius: 15px; font-size: 1.1rem;
+            font-weight: bold; cursor: pointer; transition: var(--transition);
+            color: var(--dark-blue); outline: none;
+        }
+        .interactive-btn:hover { background: var(--yellow); border-color: var(--orange); transform: translateY(-3px); }
+        .interactive-btn.correct { background: #4caf50 !important; color: white !important; border-color: #388e3c !important; }
+        .interactive-btn.incorrect { background: #f44336 !important; color: white !important; border-color: #d32f2f !important; }
+
+        #feedback {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px);
+            width: 80%; max-width: 500px; padding: 20px; border-radius: 15px;
+            text-align: center; font-weight: bold; z-index: 200; transition: var(--transition);
+            opacity: 0; pointer-events: none;
+        }
+        #feedback.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .feedback-success { background: #dff0d8; color: #3c763d; border: 2px solid #3c763d; }
+        .feedback-error { background: #f2dede; color: #a94442; border: 2px solid #a94442; }
+
+        .progress-bar {
+            position: absolute; bottom: 0; left: 0; height: 8px;
+            background: var(--yellow); transition: width 0.5s ease;
+        }
+
+        .community-map {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; max-width: 600px;
+        }
+        .place {
+            background: var(--white); border: 3px solid var(--orange); border-radius: 15px;
+            padding: 20px; cursor: pointer; transition: var(--transition);
+        }
+        .place:hover { background: var(--light-blue); transform: scale(1.05); }
+
+        @media (max-width: 600px) {
+            .slide { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .nav-arrow { width: 50px; height: 50px; }
+            .community-map { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <!-- Diapositiva 1: Portada -->
+    <div class="slide active" id="slide-1">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🤝</div>
+        <p class="subtitle">PRODUCTIVIDAD Y DESARROLLO • 4° PRIMARIA</p>
+        <h1>Convivencia en Comunidad</h1>
+        <p class="subtitle">Lección 8</p>
+        <div style="background: var(--brick-red); color: white; padding: 15px 30px; border-radius: 50px; margin-top: 20px; font-weight: bold;">
+            ¡Respeto para todos, calidad para vivir!
+        </div>
+    </div>
+
+    <!-- Diapositiva 2: Objetivos -->
+    <div class="slide" id="slide-2">
+        <h2>🎯 Objetivos de la Lección</h2>
+        <div class="card">
+            <p>✅ <strong>Entender</strong> la importancia de las normas para vivir en comunidad.</p>
+            <p>✅ <strong>Valorar</strong> el respeto como la base de una convivencia de calidad.</p>
+            <p>✅ <strong>Aplicar</strong> parámetros de buena conducta en nuestro entorno.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 3: Activación -->
+    <div class="slide" id="slide-3">
+        <h2>😊 ¿Cómo te sientes?</h2>
+        <p>Cuando sales a la calle y un vecino te saluda con una sonrisa, tú...</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Qué bien! La cortesía mejora la convivencia.', true)">Te sientes feliz y saludas de vuelta</button>
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Oh! Un saludo siempre ayuda a que la comunidad sea mejor. ¡Intenta ser amable!', false)">Te sientes indiferente</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 4: Palabras Clave -->
+    <div class="slide" id="slide-4">
+        <h2>📚 Diccionario de la Comunidad</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <div class="card" style="max-width: 250px; border-color: var(--yellow);">
+                <center style="font-size: 2rem;">🏘️</center>
+                <strong>Comunidad:</strong> El grupo de personas con quienes compartimos un lugar.
+            </div>
+            <div class="card" style="max-width: 250px; border-color: var(--brick-red);">
+                <center style="font-size: 2rem;">👂</center>
+                <strong>Tolerancia:</strong> Respetar las ideas y formas de ser de los demás.
+            </div>
+            <div class="card" style="max-width: 250px; border-color: var(--dark-blue);">
+                <center style="font-size: 2rem;">🤝</center>
+                <strong>Solidaridad:</strong> Ayudar a los vecinos cuando lo necesitan.
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 5: Contenido Principal 1 -->
+    <div class="slide" id="slide-5">
+        <h2>🚦 Normas en el Espacio Público</h2>
+        <p>Al igual que en una fábrica hay normas de calidad, en la comunidad hay normas para que todos estemos seguros.</p>
+        <div class="card">
+            <p>• <strong>Respetar semáforos:</strong> Cuida tu vida y la de otros.</p>
+            <p>• <strong>Basura en su lugar:</strong> Mantiene el ambiente sano y limpio.</p>
+            <p>• <strong>Cuidar los parques:</strong> Son espacios de todos.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 6: Contenido Principal 2 -->
+    <div class="slide" id="slide-6">
+        <h2>🏫 Normas en el Colegio</h2>
+        <p>Nuestra clase es una pequeña comunidad. Para que el aprendizaje sea de calidad, necesitamos:</p>
+        <div class="card" style="border-color: var(--brick-red);">
+            <p>1. <strong>Escuchar:</strong> Cuando alguien habla, le damos nuestra atención.</p>
+            <p>2. <strong>Compartir:</strong> Los materiales y el espacio son para todos.</p>
+            <p>3. <strong>Pedir turno:</strong> El orden ayuda a que todos participen.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 7: Contenido Principal 3 -->
+    <div class="slide" id="slide-7">
+        <h2>✨ Convivencia de Calidad</h2>
+        <p>Tener "calidad" en la convivencia significa que nuestros resultados son: <strong>Paz, Respeto y Amistad.</strong></p>
+        <div class="card" style="border-color: var(--dark-blue);">
+            <p>⭐ No gritamos a los demás.</p>
+            <p>⭐ Usamos palabras amables: "Disculpa", "Por favor".</p>
+            <p>⭐ Incluimos a todos en los juegos.</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 8: Exploración Visual -->
+    <div class="slide" id="slide-8">
+        <h2>🔍 Explora tu Comunidad</h2>
+        <p>Haz clic en cada lugar para ver cómo convivir mejor.</p>
+        <div class="community-map">
+            <div class="place" onclick="showQuickFeedback('EL PARQUE: Recogemos la basura y cuidamos los juegos.', true)">
+                <span>🌳 El Parque</span>
+            </div>
+            <div class="place" onclick="showQuickFeedback('LA CALLE: Caminamos por la acera y saludamos al vecino.', true)">
+                <span>🚶 La Calle</span>
+            </div>
+            <div class="place" onclick="showQuickFeedback('LA TIENDA: Esperamos nuestro turno en la fila.', true)">
+                <span>🛒 La Tienda</span>
+            </div>
+            <div class="place" onclick="showQuickFeedback('EL COLEGIO: Ayudamos a mantener limpio el salón.', true)">
+                <span>✏️ El Colegio</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 9: Actividad de Comprensión -->
+    <div class="slide" id="slide-9">
+        <h2>🎯 Elige el Respeto</h2>
+        <p>Ves a un compañero nuevo que está solo en el recreo. ¿Qué es lo correcto?</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="checkActivity(this, false, '¡No! Eso no ayuda a la convivencia. ¡Intenta de nuevo!')">Seguir jugando con tus amigos de siempre</button>
+            <button class="interactive-btn" onclick="checkActivity(this, true, '¡Excelente! Incluir a los demás es una norma de oro de la comunidad.')">Acercarte e invitarlo a jugar con ustedes</button>
+            <button class="interactive-btn" onclick="checkActivity(this, false, '¡Oh no! Eso lo hará sentir triste. ¡Busca la mejor opción!')">Mirarlo desde lejos sin decirle nada</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 10: Juego Educativo -->
+    <div class="slide" id="slide-10">
+        <h2>🎮 Verdadero o Falso</h2>
+        <div class="card" style="border-color: var(--yellow);">
+            <p style="text-align:center; font-size: 1.5rem;">"Las normas en la comunidad solo sirven para que los policías nos regañen."</p>
+        </div>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="checkActivity(this, false, '¡Incorrecto! Las normas sirven para que todos vivamos seguros y felices. Reintenta.')">✅ Verdadero</button>
+            <button class="interactive-btn" onclick="checkActivity(this, true, '¡Correcto! Las normas son acuerdos para protegernos y vivir en paz.')">❌ Falso</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 11: Metacognición -->
+    <div class="slide" id="slide-11">
+        <h2>💭 Reflexión Final</h2>
+        <p>¿Qué acción de respeto puedes hacer hoy mismo en tu casa o comunidad?</p>
+        <div class="btn-grid">
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Fantástico! Ayudar a los vecinos es genial.', true)">Ayudar a alguien mayor</button>
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Súper! Un lugar limpio es mejor para todos.', true)">No tirar basura</button>
+            <button class="interactive-btn" onclick="showQuickFeedback('¡Muy bien! Las palabras amables abren puertas.', true)">Saludar con alegría</button>
+        </div>
+    </div>
+
+    <!-- Diapositiva 12: Cierre -->
+    <div class="slide" id="slide-12">
+        <div style="font-size: 5rem;">🌎</div>
+        <h1>¡Eres un Gran Ciudadano!</h1>
+        <p>Has terminado la lección 8. Recuerda que tu comportamiento ayuda a que tu comunidad sea un lugar de calidad.</p>
+        <p style="color: var(--orange); font-weight: bold;">¡Respeta a todos y sé feliz!</p>
+        <div style="margin-top: 20px;">
+             <button class="interactive-btn" style="background: var(--orange); color: white;" onclick="resetApp()">Reiniciar Lección</button>
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <button class="nav-arrow arrow-left" id="prevBtn" onclick="changeSlide(-1)">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </button>
+    <button class="nav-arrow arrow-right" id="nextBtn" onclick="changeSlide(1)">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+    </button>
+
+    <div id="feedback"></div>
+    <div class="progress-bar" id="progress"></div>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+
+    function updateNav() {
+        document.getElementById('prevBtn').disabled = currentSlide === 1;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+        const progress = (currentSlide / totalSlides) * 100;
+        document.getElementById('progress').style.width = progress + '%';
+    }
+
+    function changeSlide(direction) {
+        const oldSlide = document.getElementById(`slide-${currentSlide}`);
+        const nextIdx = currentSlide + direction;
+        if (nextIdx < 1 || nextIdx > totalSlides) return;
+
+        currentSlide = nextIdx;
+        const newSlide = document.getElementById(`slide-${currentSlide}`);
+
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active', 'previous'));
+        oldSlide.classList.add(direction > 0 ? 'previous' : '');
+        newSlide.classList.add('active');
+        hideFeedback();
+        updateNav();
+    }
+
+    function showQuickFeedback(message, isSuccess) {
+        const fb = document.getElementById('feedback');
+        fb.textContent = message;
+        fb.className = isSuccess ? 'feedback-success show' : 'feedback-error show';
+        if (isSuccess) setTimeout(() => hideFeedback(), 3000);
+    }
+
+    function hideFeedback() {
+        document.getElementById('feedback').classList.remove('show');
+    }
+
+    function checkActivity(btn, isCorrect, message) {
+        const siblings = btn.parentElement.querySelectorAll('.interactive-btn');
+        siblings.forEach(s => s.classList.remove('correct', 'incorrect'));
+        if (isCorrect) {
+            btn.classList.add('correct');
+            showQuickFeedback(message, true);
+        } else {
+            btn.classList.add('incorrect');
+            showQuickFeedback(message, false);
+        }
+    }
+
+    function resetApp() {
+        currentSlide = 1;
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active', 'previous'));
+        document.getElementById('slide-1').classList.add('active');
+        document.querySelectorAll('.interactive-btn').forEach(b => b.classList.remove('correct', 'incorrect'));
+        updateNav();
+    }
+
+    updateNav();
+</script>
+
+</body>
+</html>
