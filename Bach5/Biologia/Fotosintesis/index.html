@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Fotosíntesis - 5° Bachillerato</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="presentation-container">
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow prev" id="prevBtn">⬅️</button>
+    <button class="nav-arrow next" id="nextBtn">➡️</button>
+
+    <!-- Slide 1: Portada -->
+    <section class="slide active" id="slide-1">
+        <img src="assets/portada.png" alt="Fotosíntesis" class="illustration-img">
+        <h1>La Fotosíntesis</h1>
+        <p>Biología - 5° Bachillerato</p>
+        <div class="card" style="text-align: center;">
+            ¡Bienvenido! Hoy exploraremos cómo las plantas transforman la luz en vida.
+        </div>
+    </section>
+
+    <!-- Slide 2: Objetivos -->
+    <section class="slide" id="slide-2">
+        <h2>Objetivos de Aprendizaje</h2>
+        <div class="card">
+            <ul>
+                <li>Analizar el proceso de conversión de energía lumínica en energía química.</li>
+                <li>Identificar la función del ATP y el NADPH como transportadores intermediarios.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Slide 3: Activación -->
+    <section class="slide" id="slide-3">
+        <h2>¿De dónde viene tu energía?</h2>
+        <p>Cada vez que te mueves o piensas, usas energía que originalmente vino del Sol. ¿Cómo crees que esa energía solar llega a tus células?</p>
+        <div class="btn-grid">
+            <button class="option-btn" onclick="showFeedback(true, '¡Exacto! Las plantas son el puente entre el Sol y nosotros.')">A través de las plantas</button>
+            <button class="option-btn" onclick="showFeedback(false, 'Casi, pero recuerda que el Sol es la fuente primaria. Las plantas la capturan primero.')">Directamente del aire</button>
+        </div>
+    </section>
+
+    <!-- Slide 4: Palabras Clave -->
+    <section class="slide" id="slide-4">
+        <h2>Conceptos Fundamentales</h2>
+        <div class="card">
+            <strong>ATP (Adenosín Trifosfato):</strong> La "moneda" energética de la célula. Almacena energía lista para ser usada.
+        </div>
+        <div class="card" style="border-left-color: var(--primary-yellow);">
+            <strong>NADPH:</strong> Un potente transportador de electrones que lleva energía química a la fase oscura.
+        </div>
+    </section>
+
+    <!-- Slide 5: Fase Lumínica -->
+    <section class="slide" id="slide-5">
+        <h2>1. Fase Lumínica</h2>
+        <p>Ocurre en los <strong>tilacoides</strong>. La luz golpea la clorofila, rompe moléculas de agua (fotólisis) y libera oxígeno. Aquí se cargan las baterías: el ATP y el NADPH.</p>
+        <div class="card">
+            💡 <em>Dato clave: Sin agua y luz, no hay carga de energía.</em>
+        </div>
+    </section>
+
+    <!-- Slide 6: Ciclo de Calvin -->
+    <section class="slide" id="slide-6">
+        <h2>2. Fase Oscura (Ciclo de Calvin)</h2>
+        <p>Ocurre en el <strong>estroma</strong>. No necesita luz directa. Usa el ATP y el NADPH fabricados antes para convertir CO₂ en glucosa (azúcar).</p>
+        <div class="card" style="border-left-color: var(--primary-red);">
+            🍎 <em>Resultado: ¡Comida para la planta y para nosotros!</em>
+        </div>
+    </section>
+
+    <!-- Slide 7: Exploración Visual -->
+    <section class="slide" id="slide-7">
+        <h2>Explora el Cloroplasto</h2>
+        <p>Haz clic en las partes del cloroplasto para aprender más.</p>
+        <div style="position: relative;">
+            <img src="assets/cloroplasto.png" alt="Cloroplasto" class="illustration-img">
+            <!-- Simulated interactive hotspots -->
+            <button class="option-btn" style="position: absolute; top: 30%; left: 40%; padding: 5px 10px;" onclick="showFeedback(true, 'TILACCOIDE: Aquí ocurre la fase lumínica.')">Partes Verdes</button>
+            <button class="option-btn" style="position: absolute; top: 60%; left: 60%; padding: 5px 10px;" onclick="showFeedback(true, 'ESTROMA: El fluido donde ocurre el Ciclo de Calvin.')">Espacio Fluido</button>
+        </div>
+    </section>
+
+    <!-- Slide 8: Actividad de Comprensión -->
+    <section class="slide" id="slide-8">
+        <h2>Desafío de Energía</h2>
+        <p>¿Cuál es la función principal del ATP y el NADPH en la fotosíntesis?</p>
+        <div class="btn-grid">
+            <button class="option-btn" onclick="checkAnswer(this, false, 'No exactamente. Su función es mover la energía de un lugar a otro.')">Dar color verde a la planta</button>
+            <button class="option-btn" onclick="checkAnswer(this, true, '¡Correcto! Son transportadores intermediarios de energía química.')">Transportar energía química</button>
+            <button class="option-btn" onclick="checkAnswer(this, false, 'Ese es el rol del CO₂ y el Agua.')">Absorber luz solar</button>
+        </div>
+    </section>
+
+    <!-- Slide 9: Juego Educativo -->
+    <section class="slide" id="slide-9">
+        <h2>Ordena el Proceso</h2>
+        <p>Haz clic en los pasos en el orden correcto (1 al 3):</p>
+        <div id="sequence-game" class="btn-grid">
+            <button class="option-btn" data-order="2" onclick="handleSequence(this)">Ciclo de Calvin (Glucosa)</button>
+            <button class="option-btn" data-order="1" onclick="handleSequence(this)">Captura de luz (ATP/NADPH)</button>
+            <button class="option-btn" data-order="3" onclick="handleSequence(this)">Crecimiento de la planta</button>
+        </div>
+        <div id="sequence-msg" style="margin-top: 20px; font-weight: bold;"></div>
+    </section>
+
+    <!-- Slide 10: Aplicación Práctica -->
+    <section class="slide" id="slide-10">
+        <h2>¿Por qué importa?</h2>
+        <p>Sin la fotosíntesis, la atmósfera no tendría oxígeno y no habría base para las cadenas alimenticias. Si los cloroplastos dejaran de funcionar mañana...</p>
+        <div class="btn-grid">
+            <button class="option-btn" onclick="showFeedback(true, 'Así es. Somos dependientes de este proceso microscópico.')">La vida como la conocemos terminaría</button>
+        </div>
+    </section>
+
+    <!-- Slide 11: Metacognición -->
+    <section class="slide" id="slide-11">
+        <h2>Reflexión</h2>
+        <div class="card">
+            <p>¿Qué parte del proceso de fotosíntesis te pareció más sorprendente?</p>
+            <p>¿Cómo explicarías el rol del ATP a alguien que no sabe de biología?</p>
+        </div>
+        <p><em>Tómate un momento para pensar en lo aprendido.</em></p>
+    </section>
+
+    <!-- Slide 12: Cierre -->
+    <section class="slide" id="slide-12">
+        <h1 style="color: var(--primary-orange);">¡Felicidades!</h1>
+        <img src="https://img.icons8.com/fluency/96/000000/medal.png" alt="Medalla">
+        <p>Has completado la lección sobre Fotosíntesis.</p>
+        <div class="card">
+            Ahora comprendes cómo la energía solar se convierte en la base de la vida. ¡Sigue explorando!
+        </div>
+    </section>
+
+    <!-- Feedback Overlay -->
+    <div id="feedback-overlay">
+        <div class="feedback-card">
+            <h3 id="feedback-title">¡Buen trabajo!</h3>
+            <p id="feedback-text"></p>
+            <button class="retry-btn" onclick="hideFeedback()">Continuar</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
